@@ -17,17 +17,19 @@ func main() {
 
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
-		command, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		prompt, err := bufio.NewReader(os.Stdin).ReadString('\n')
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error reading input:", err)
 			os.Exit(1)
 		}
 
-		tokens := strings.Split(command, " ")
+		prompt = strings.TrimSpace(prompt)
+		tokens := strings.Split(prompt, " ")
+
 		program := tokens[0]
 		args := tokens[1:]
 
-		switch strings.TrimSpace(program) {
+		switch program {
 		case builtin["exit"]:
 			if strings.TrimSpace(args[0]) == "0" {
 				os.Exit(0)
@@ -52,14 +54,14 @@ func main() {
 			fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
 
 		default:
-			if file, exists := isInPath(strings.TrimSpace(program)); exists {
-				cmd := exec.Command(strings.TrimSpace(file), args...)
+			if _, exists := isInPath(program); exists {
+				cmd := exec.Command(program, args...)
 				cmd.Stdout = os.Stdout
 				cmd.Stderr = os.Stderr
 				cmd.Run()
 				break
 			}
-			fmt.Println(command[:len(command)-1] + ": command not found")
+			fmt.Println(prompt[:len(prompt)-1] + ": command not found")
 		}
 	}
 }
