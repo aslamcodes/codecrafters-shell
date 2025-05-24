@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -34,37 +35,42 @@ func main() {
 		case builtin["echo"]:
 			fmt.Println(strings.TrimSpace(strings.Join(args, " ")))
 		case builtin["type"]:
-			value, exists := builtin[strings.TrimSpace(args[0])]
+			command := strings.TrimSpace(args[0])
+
+			value, exists := builtin[command]
 
 			if exists {
 				fmt.Printf("%s is a shell builtin\n", value)
 				break
 			}
 
-			path := os.Getenv("PATH")
-
-			if path == "" {
-				break
-			}
-
-			found := false
-			exec := strings.TrimSpace(args[0])
-			for location := range strings.SplitSeq(path, string(os.PathListSeparator)) {
-				file := location + "/" + exec
-				if _, err := os.Stat(file); err == nil {
-					fmt.Printf("%s is %s\n", exec, file)
-					found = true
-					break
-				}
-			}
-
-			if found {
+			if file, exists := isInPath(command); exists {
+				fmt.Printf("%s is %s\n", command, file)
 				break
 			}
 
 			fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
+
 		default:
+			if file, exists := isInPath(strings.TrimSpace(program)); exists {
+				cmd := exec.Command(file, strings.Join(args, " "))
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				cmd.Run()
+				break
+			}
 			fmt.Println(command[:len(command)-1] + ": command not found")
 		}
 	}
+}
+
+func isInPath(exec string) (string, bool) {
+	path := os.Getenv("PATH")
+	for location := range strings.SplitSeq(path, string(os.PathListSeparator)) {
+		file := location + "/" + exec
+		if _, err := os.Stat(file); err == nil {
+			return file, true
+		}
+	}
+	return "", false
 }
