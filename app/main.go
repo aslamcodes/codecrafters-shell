@@ -20,10 +20,16 @@ func main() {
 		program := tokens[0]
 		args := tokens[1:]
 
-		if strings.TrimSpace(program) == "exit" && strings.TrimSpace(args[0]) == "0" {
-			os.Exit(0)
-		}
+		switch strings.TrimSpace(program) {
 
-		fmt.Println(command[:len(command)-1] + ": command not found")
+		case "exit":
+			if strings.TrimSpace(args[0]) == "0" {
+				os.Exit(0)
+			}
+		case "echo":
+			fmt.Println(strings.TrimSpace(strings.Join(args, " ")))
+		default:
+			fmt.Println(command[:len(command)-1] + ": command not found")
+		}
 	}
 }
