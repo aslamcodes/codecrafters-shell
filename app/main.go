@@ -38,10 +38,25 @@ func main() {
 
 			if exists {
 				fmt.Printf("%s is a shell builtin\n", value)
-			} else {
-				fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
+				return
 			}
 
+			path := os.Getenv("PATH")
+
+			if path == "" {
+				return
+			}
+
+			exec := strings.TrimSpace(args[0])
+			for location := range strings.SplitSeq(path, string(os.PathListSeparator)) {
+				file := location + "/" + exec
+				if _, err := os.Stat(file); err == nil {
+					fmt.Printf("%s is %s", exec, file)
+					return
+				}
+			}
+
+			fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
 		default:
 			fmt.Println(command[:len(command)-1] + ": command not found")
 		}
