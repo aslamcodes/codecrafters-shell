@@ -8,6 +8,12 @@ import (
 )
 
 func main() {
+	builtin := map[string]string{
+		"echo": "echo",
+		"exit": "exit",
+		"type": "type",
+	}
+
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
 		command, err := bufio.NewReader(os.Stdin).ReadString('\n')
@@ -21,13 +27,21 @@ func main() {
 		args := tokens[1:]
 
 		switch strings.TrimSpace(program) {
-
-		case "exit":
+		case builtin["exit"]:
 			if strings.TrimSpace(args[0]) == "0" {
 				os.Exit(0)
 			}
-		case "echo":
+		case builtin["echo"]:
 			fmt.Println(strings.TrimSpace(strings.Join(args, " ")))
+		case builtin["type"]:
+			value, exists := builtin[strings.TrimSpace(args[0])]
+
+			if exists {
+				fmt.Printf("%s is a shell builtin\n", value)
+			} else {
+				fmt.Printf("%s: not found", strings.TrimSpace(args[0]))
+			}
+
 		default:
 			fmt.Println(command[:len(command)-1] + ": command not found")
 		}
