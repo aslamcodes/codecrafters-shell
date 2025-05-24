@@ -53,7 +53,7 @@ func main() {
 
 		default:
 			if _, exists := isInPath(strings.TrimSpace(program)); exists {
-				cmd := exec.Command(program, strings.Join(args, " "))
+				cmd := exec.Command(strings.TrimSpace(program), strings.Join(args, " "))
 				cmd.Stdout = os.Stdout
 				cmd.Stderr = os.Stderr
 				cmd.Run()
