@@ -52,8 +52,8 @@ func main() {
 			fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
 
 		default:
-			if file, exists := isInPath(strings.TrimSpace(program)); exists {
-				cmd := exec.Command(file, strings.Join(args, " "))
+			if _, exists := isInPath(strings.TrimSpace(program)); exists {
+				cmd := exec.Command(program, strings.Join(args, " "))
 				cmd.Stdout = os.Stdout
 				cmd.Stderr = os.Stderr
 				cmd.Run()
