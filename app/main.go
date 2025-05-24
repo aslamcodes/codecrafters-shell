@@ -21,8 +21,8 @@ func main() {
 			fmt.Fprintln(os.Stderr, "Error reading input:", err)
 			os.Exit(1)
 		}
-		tokens := strings.Split(command, " ")
 
+		tokens := strings.Split(command, " ")
 		program := tokens[0]
 		args := tokens[1:]
 
@@ -38,22 +38,28 @@ func main() {
 
 			if exists {
 				fmt.Printf("%s is a shell builtin\n", value)
-				return
+				break
 			}
 
 			path := os.Getenv("PATH")
 
 			if path == "" {
-				return
+				break
 			}
 
+			found := false
 			exec := strings.TrimSpace(args[0])
 			for location := range strings.SplitSeq(path, string(os.PathListSeparator)) {
 				file := location + "/" + exec
 				if _, err := os.Stat(file); err == nil {
-					fmt.Printf("%s is %s", exec, file)
-					return
+					fmt.Printf("%s is %s\n", exec, file)
+					found = true
+					break
 				}
+			}
+
+			if found {
+				break
 			}
 
 			fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
