@@ -61,7 +61,7 @@ func main() {
 				cmd.Run()
 				break
 			}
-			fmt.Println(prompt[:len(prompt)-1] + ": command not found")
+			fmt.Println(program + ": command not found")
 		}
 	}
 }
