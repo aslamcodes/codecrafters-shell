@@ -39,7 +39,7 @@ func main() {
 			if exists {
 				fmt.Printf("%s is a shell builtin\n", value)
 			} else {
-				fmt.Printf("%s: not found", strings.TrimSpace(args[0]))
+				fmt.Printf("%s: not found\n", strings.TrimSpace(args[0]))
 			}
 
 		default:
