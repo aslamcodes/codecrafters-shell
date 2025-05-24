@@ -21,7 +21,6 @@ func main() {
 		args := tokens[1:]
 
 		if strings.TrimSpace(program) == "exit" && strings.TrimSpace(args[0]) == "0" {
-			fmt.Println("Exiting")
 			os.Exit(0)
 		}
 
