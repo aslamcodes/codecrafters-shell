@@ -11,6 +11,7 @@ func GetBuiltInMap() map[string]Command {
 		"exit": &Exit{},
 		"type": &Type{},
 		"pwd":  &Pwd{},
+		"cd":   &Cd{},
 	}
 
 	return builtinMap
