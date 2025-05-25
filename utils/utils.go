@@ -1,14 +1,13 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 )
 
-func GetCurrPath() {
+func GetCurrPath() (string, error) {
 	mydir, err := os.Getwd()
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	fmt.Println(mydir)
+	return mydir, nil
 }
