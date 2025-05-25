@@ -3,6 +3,8 @@ package builtin
 import (
 	"fmt"
 	"os"
+
+	"github.com/codecrafters-io/shell-starter-go/utils"
 )
 
 type Cd struct {
@@ -11,21 +13,11 @@ type Cd struct {
 func (e *Cd) Handle(args []string) {
 	dir := args[0]
 
-	entries, err := os.ReadDir("./")
-
-	if err != nil {
-		fmt.Println("Cannot access directories")
-		return
+	if !utils.IsValidPath(dir) {
+		fmt.Printf("cd: %s: No such file or directory\n", args[0])
 	}
 
-	for _, e := range entries {
-		if dir == e.Name() {
-			os.Chdir(args[0])
-			return
-		}
-	}
-
-	fmt.Printf("cd: %s: No such file or directory\n", args[0])
+	os.Chdir(dir)
 }
 
 func (e *Cd) GetCmdName() string {

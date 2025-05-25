@@ -11,3 +11,8 @@ func GetCurrPath() (string, error) {
 	}
 	return mydir, nil
 }
+
+func IsValidPath(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
+}
