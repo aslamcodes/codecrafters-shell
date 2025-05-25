@@ -3,16 +3,12 @@ package utils
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 )
 
 func GetCurrPath() {
-	ex, err := os.Executable()
-
+	mydir, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("Error: %s", err)
+		fmt.Println(err)
 	}
-
-	exPath := filepath.Dir(ex)
-	fmt.Println(exPath)
+	fmt.Println(mydir)
 }
